@@ -1,0 +1,43 @@
+﻿@page "/"
+@using Blog.WebClient.Services
+@inject IBlogPostsService BlogPostsService
+@inject NavigationManager Navigation
+
+<PageTitle>Blog Posts</PageTitle>
+
+<button class="btn btn-primary" @onclick="NavigateToAddBlogPost">Add Blog Post</button>
+
+<h3>Blog Posts</h3>
+
+@if (blogPosts == null)
+{
+    <p>Loading...</p>
+}
+else if (!blogPosts.Any())
+{
+    <p>No blog posts available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in blogPosts)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.Content</td>
+                    <td>@post.CreatedAt.ToString("MMMM dd, yyyy")</td>
+                    <td>@post.UpdatedAt.ToString("MMMM dd, yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
