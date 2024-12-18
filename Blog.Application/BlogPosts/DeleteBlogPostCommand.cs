@@ -11,6 +11,9 @@ public class DeleteBlogPostCommandHandler(IBlogPostRepository blogPostRepository
     public async Task<bool> Handle(DeleteBlogPostCommand command, CancellationToken cancellationToken)
     {
         var blogPost = await blogPostRepository.GetBlogPostByIdAsync(command.Id, cancellationToken) ?? throw new NotFoundException(nameof(BlogPost), command.Id);
-        return await blogPostRepository.DeleteBlogPostAsync(command.Id, cancellationToken);
+        blogPostRepository.DeleteBlogPost(blogPost);
+        await blogPostRepository.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }

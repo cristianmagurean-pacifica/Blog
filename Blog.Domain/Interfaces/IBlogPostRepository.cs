@@ -2,9 +2,10 @@
 namespace Blog.Domain.Interfaces;
 public interface IBlogPostRepository
 {
-    Task<BlogPost> CreateBlogPostAsync(BlogPost blogPost, CancellationToken cancellationToken);
-    Task<bool> DeleteBlogPostAsync(int id, CancellationToken cancellationToken);
+    void CreateBlogPost(BlogPost blogPost);
+    void DeleteBlogPost(BlogPost blogPost);
     Task<IReadOnlyCollection<BlogPost>> GetAllBlogPostsAsync(CancellationToken cancellationToken);
     Task<BlogPost?> GetBlogPostByIdAsync(int id, CancellationToken cancellationToken);
-    Task<bool> UpdateBlogPostAsync(BlogPost blogPost, CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    void UpdateBlogPost(BlogPost blogPost);
 }

@@ -6,7 +6,9 @@ public class BlogPostRepository(BlogDbContext blogDbContext) : IBlogPostReposito
 {
     public async Task<IReadOnlyCollection<BlogPost>> GetAllBlogPostsAsync(CancellationToken cancellationToken)
     {
-       return await blogDbContext.BlogPosts.ToListAsync(cancellationToken);
+       return await blogDbContext.BlogPosts
+            .Include(blogPost => blogPost.User)     
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<BlogPost?> GetBlogPostByIdAsync(int id, CancellationToken cancellationToken)
@@ -14,42 +16,23 @@ public class BlogPostRepository(BlogDbContext blogDbContext) : IBlogPostReposito
         return await blogDbContext.BlogPosts.FindAsync([id], cancellationToken);
     }
 
-    public async Task<BlogPost> CreateBlogPostAsync(BlogPost blogPost, CancellationToken cancellationToken)
-    {
-        blogPost.CreatedAt = DateTime.UtcNow;
-        blogPost.UpdatedAt = DateTime.UtcNow;
-        blogDbContext.BlogPosts.Add(blogPost);
-        await blogDbContext.SaveChangesAsync(cancellationToken);
-        return blogPost;
+    public void CreateBlogPost(BlogPost blogPost)
+    {       
+        blogDbContext.BlogPosts.Add(blogPost);       
     }
 
-    public async Task<bool> UpdateBlogPostAsync(BlogPost blogPost, CancellationToken cancellationToken)
+    public void UpdateBlogPost(BlogPost blogPost)
     {
-        var existingBlogPost = await blogDbContext.BlogPosts.FindAsync([blogPost.Id], cancellationToken);
-        if (existingBlogPost == null)
-        {
-            return false;
-        }
-
-        existingBlogPost.Title = blogPost.Title;
-        existingBlogPost.Content = blogPost.Content;
-        existingBlogPost.UpdatedAt = DateTime.UtcNow;
-
-        blogDbContext.Entry(existingBlogPost).State = EntityState.Modified;
-        await blogDbContext.SaveChangesAsync(cancellationToken);
-        return true;
+        blogDbContext.BlogPosts.Update(blogPost);
     }
 
-    public async Task<bool> DeleteBlogPostAsync(int id, CancellationToken cancellationToken)
+    public void DeleteBlogPost(BlogPost blogPost)
     {
-        var blogPost = await blogDbContext.BlogPosts.FindAsync([id], cancellationToken);
-        if (blogPost == null)
-        {
-            return false;
-        }
+        blogDbContext.BlogPosts.Remove(blogPost);     
+    }
 
-        blogDbContext.BlogPosts.Remove(blogPost);
-        await blogDbContext.SaveChangesAsync(cancellationToken);
-        return true;
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {      
+        return await blogDbContext.SaveChangesAsync(cancellationToken);      
     }
 }

@@ -47,8 +47,8 @@ public class BlogPostsController : ControllerBase
         return Ok(mapper.Map<BlogPostDto>(createdBlogPost));     
     }
 
-    // PUT: api/BlogPosts/5
-    [HttpPut("{id}")]
+    // PUT: api/BlogPosts
+    [HttpPut]
     public async Task<IActionResult> UpdateBlogPost(BlogPost blogPostDto, CancellationToken cancellationToken)
     {
         logger.LogInformation($"Update blog post with id: {blogPostDto.Id}");

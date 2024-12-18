@@ -12,11 +12,12 @@ public class UpdateBlogPostCommandHandler(IBlogPostRepository blogPostRepository
     {
         var blogPost = await blogPostRepository.GetBlogPostByIdAsync(command.Id, cancellationToken) ?? throw new NotFoundException(nameof(BlogPost), command.Id);
 
-        blogPost.Title = command.Title;
-        blogPost.Content = command.Content;
-        blogPost.UpdatedAt = DateTime.UtcNow;
+        blogPost.Update(command.Title, command.Content);
 
-        return await blogPostRepository.UpdateBlogPostAsync(blogPost, cancellationToken);
+        blogPostRepository.UpdateBlogPost(blogPost);
+        await blogPostRepository.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
 

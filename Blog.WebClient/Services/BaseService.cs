@@ -59,10 +59,9 @@ public class BaseService<T> : IBaseService<T>
         };
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task UpdateAsync(T entity)
     {
-        var httpResponse = await Http.PutAsJsonAsync($"api/{ControllerName}", entity, options);
-        return await httpResponse.Content.ReadFromJsonAsync<T>(options);
+        await Http.PutAsJsonAsync($"api/{ControllerName}", entity, options);       
     }
 
     public async Task<bool> DeleteAsync(int entityId)

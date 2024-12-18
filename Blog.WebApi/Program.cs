@@ -2,6 +2,8 @@ using Blog.Domain.Exceptions;
 using Blog.Infrastructure.Data;
 using Blog.Application;
 using Microsoft.EntityFrameworkCore;
+using Blog.Domain.Interfaces;
+using Blog.WebApi.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,8 @@ builder.Services.AddAutoMapper(config =>
     config.AllowNullCollections = true;
     config.CreateMap<string, string>().ConvertUsing(str => (str ?? "").Trim());
 });
+
+builder.Services.AddScoped<IUserContext, UserContext>();
 
 var app = builder.Build();
 
