@@ -12,7 +12,7 @@ Open the project from Visual Studio
 
 Use appsettings.json from Blog.WebApi to update the connection string to the database
 
-Launch the project in debug mode or go to Solution Explorer, select FPriceAPI and use contextual menu Publish to publish the Web API
+Launch the project in debug mode or go to Solution Explorer
 
 # Technologies
 
