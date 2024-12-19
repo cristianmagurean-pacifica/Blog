@@ -18,9 +18,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(config =>
 {
-    config.AddMaps(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.FullName.Contains("Microsoft.Data.SqlClient")));
-    config.AllowNullCollections = true;
-    config.CreateMap<string, string>().ConvertUsing(str => (str ?? "").Trim());
+    config.AddMaps(AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName != null && !x.FullName.Contains("Microsoft.Data.SqlClient")));
+    config.AllowNullCollections = true;  
 });
 
 builder.Services.AddScoped<IUserContext, UserContext>();
