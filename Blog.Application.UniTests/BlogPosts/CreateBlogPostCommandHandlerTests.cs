@@ -25,14 +25,11 @@ namespace Blog.Application.UnitTests.BlogPosts
         public async Task Handle_ShouldCreateBlogPost()
         {
             // Arrange
-            var command = new CreateBlogPostCommand
+            var command = new CreateBlogPostCommand(new BlogPost
             {
-                BlogPost = new BlogPostDto
-                {
-                    Title = "Test Title",
-                    Content = "Test Content"
-                }
-            };
+                Title = "Test Title",
+                Content = "Test Content"
+            });
             var userId = 1;
             _userContextMock.Setup(x => x.GetCurrentUserId()).Returns(userId);
 

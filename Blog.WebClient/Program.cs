@@ -1,11 +1,14 @@
+using Blog.Domain.Exceptions;
 using Blog.WebClient.Components;
 using Blog.WebClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var blogApiBaseAddress = builder.Configuration.GetSection("BlogApi:BaseAddress").Value ?? throw new InvalidConfigurationException("BlogApi:BaseAddress"); ;
+
 builder.Services.AddHttpClient("Blog.WebAPI", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7030/");
+    client.BaseAddress = new Uri(blogApiBaseAddress);
     client.Timeout = TimeSpan.FromMinutes(30);
 });   
 

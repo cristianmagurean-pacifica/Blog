@@ -30,33 +30,23 @@ public class BaseService<T> : IBaseService<T>
         using var request = new HttpRequestMessage(HttpMethod.Get, $"api/{ControllerName}");
         request.SetBrowserRequestCache(BrowserRequestCache.NoCache);
         using var response = await Http.SendAsync(request);
-        var result = await response.Content.ReadFromJsonAsync<List<T>>(options);
-        return result;
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<List<T>>(options) ?? [];          
+        }
+        return [];
     }
 
-    public async Task<T> GetById(int id)
+    public async Task<T?> GetById(int id)
     {
         var response = await Http.GetAsync($"api/{ControllerName}/{id}");
-        return !response.IsSuccessStatusCode ? Activator.CreateInstance<T>() : await response.Content.ReadFromJsonAsync<T>(options);
+        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<T>(options) : null;
     }   
 
-    public async Task<ServiceResult<T>> InsertAsync(T entity)
+    public async Task<T?> InsertAsync(T entity)
     {
         var httpResponse = await Http.PostAsJsonAsync($"api/{ControllerName}", entity, options);
-        if (httpResponse.IsSuccessStatusCode)
-        {
-            return new ServiceResult<T>
-            {
-                Data = await httpResponse.Content.ReadFromJsonAsync<T>(options),
-                IsSuccess = true
-            };
-        }
-
-        return new ServiceResult<T>
-        {
-            IsSuccess = false,
-            Response = httpResponse
-        };
+        return httpResponse.IsSuccessStatusCode ? await httpResponse.Content.ReadFromJsonAsync<T>(options) : null;
     }
 
     public async Task UpdateAsync(T entity)

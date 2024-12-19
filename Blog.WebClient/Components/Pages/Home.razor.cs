@@ -22,7 +22,7 @@ public partial class Home
     {
         if (blogPost.Id == 0)
         {
-            await BlogPostsService.InsertAsync(blogPost);
+            var createdBlogPost = await BlogPostsService.InsertAsync(blogPost);
         }
         else
         {
